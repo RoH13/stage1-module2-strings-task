@@ -1,5 +1,10 @@
 package com.epam.mjc;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.epam.mjc.MethodSignature.Argument;
+
 public class MethodParser {
 
     /**
@@ -20,6 +25,41 @@ public class MethodParser {
      * @return {@link MethodSignature} object filled with parsed values from source string
      */
     public MethodSignature parseFunction(String signatureString) {
-        throw new UnsupportedOperationException("You should implement this method.");
+        signatureString = signatureString.trim();
+        int start = signatureString.indexOf('(');
+        int end = signatureString.indexOf(')');
+        String arguments = signatureString.substring(start + 1, end).trim();
+        String str = signatureString.substring(0, start).trim(); 
+        List<Argument> args = new ArrayList<>();
+        if (!arguments.isEmpty()) {
+            String[] arrOfArguments = arguments.split(",\\s*");
+            for (String str1 : arrOfArguments) {
+                String[] tmp = str1.trim().split("\\s+");
+                args.add(new Argument(tmp[0], tmp[1]));
+            }
+        }
+    
+        String[] arr = str.split("\\s+");
+        String name;
+        String modif = null;
+        String type;
+        if (arr.length == 3) {
+            modif = arr[0];
+            type = arr[1];
+            name = arr[2];
+        } else{
+            type = arr[0];
+            name = arr[1];
+        }
+        MethodSignature res =  new MethodSignature(name, args);
+        res.setReturnType(type);
+        if (modif != null) {
+            res.setAccessModifier(modif);
+        }
+        return res;
+        //throw new UnsupportedOperationException("You should implement this method.");
     }
+   /*  public static void main(String[] args) {
+        System.out.println(parseFunction(" public DateTime getCurrentDateTime()"));
+    }*/
 }
